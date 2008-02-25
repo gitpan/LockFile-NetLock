@@ -17,8 +17,12 @@ use Cwd;
 use Config;
 use Net::FTP;
 use Test;
+use vars qw($total_tests);
 
-BEGIN {plan(tests => 9) if (@ARGV == 0);}
+BEGIN {
+	$total_tests = 9;
+	plan(tests => $total_tests) if (@ARGV == 0);
+}
 
 use LockFile::NetLock qw(lock unlock);
 
@@ -384,8 +388,19 @@ $is_win32 = ($^O eq 'MSWin32');
 #print "starting with pid $$ and args: ", join(' ', @ARGV);
 $child_test = (shift @ARGV) || '';
 $child_opt = (shift @ARGV) || 'standard';
-$ftp_cfg_href = do 'netlock.cfg'
-        if (-r 'netlock.cfg');
+
+$ftp_cfg_href = do 'netlock.cfg' if (-r 'netlock.cfg');
+
+unless (	$ftp_cfg_href    and
+		$ftp_cfg_href->{ test_dir } and $ftp_cfg_href->{ test_host }
+) {
+	# hack to get around test harnesses that don't do test configuration
+	# if you are debugging and see this comment try 
+	#     manually running "perl Makefile.PL" and entering test server etc.
+	ok 1; # some credit for getting this far;
+	skip $_ for ( 2 .. $total_tests );
+	exit;
+}
 
 $generic_ftp_fn = $ftp_cfg_href->{test_dir};
 $do_failed_unlock = ($Net::FTP::VERSION >= 2.64) && site_idle_ok($ftp_cfg_href);

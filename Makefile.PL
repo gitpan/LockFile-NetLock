@@ -8,7 +8,7 @@ use constant NETLOCK_CFG => 'netlock.cfg';
 
 WriteMakefile(
     'NAME'      => 'LockFile::NetLock',
-    'VERSION_FROM' => 'NetLock.pm', # finds $VERSION
+    'VERSION_FROM' => 'lib/LockFile/NetLock.pm', # finds $VERSION
     'EXE_FILES' => ['netlock'],
     'realclean' => {FILES => NETLOCK_CFG}
 );

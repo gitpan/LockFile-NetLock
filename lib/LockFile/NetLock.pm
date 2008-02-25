@@ -32,7 +32,7 @@ use POSIX qw(sys_wait_h signal_h);
 our @ISA = qw/ Exporter /;
 our @EXPORT_OK = qw(lock unlock);
 
-our $VERSION = '0.29';
+our $VERSION = '0.31';
 
 our $errstr;
 
