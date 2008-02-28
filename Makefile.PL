@@ -10,7 +10,8 @@ WriteMakefile(
     'NAME'      => 'LockFile::NetLock',
     'VERSION_FROM' => 'lib/LockFile/NetLock.pm', # finds $VERSION
     'EXE_FILES' => ['netlock'],
-    'realclean' => {FILES => NETLOCK_CFG}
+    'realclean' => {FILES => NETLOCK_CFG},
+    INSTALLDIRS => 'site'
 );
 
 my $old_cfg_href;
@@ -34,7 +35,7 @@ now be prompted for the FTP host, user name and password.
 
 EOT
 
-while(1) {
+foreach (1 .. 5) {
         $ftp_server = prompt(
                 "FTP host where you have directory creation " .
                 "privileges.", $old_cfg_href->{test_host}

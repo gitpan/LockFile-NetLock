@@ -23,6 +23,7 @@ package LockFile::NetLock;
 
 use strict;
 use warnings;
+require 5.006; # goes back a ways but does not seem to like 5.005
 use Exporter;
 use Config;
 use Carp;
@@ -32,7 +33,7 @@ use POSIX qw(sys_wait_h signal_h);
 our @ISA = qw/ Exporter /;
 our @EXPORT_OK = qw(lock unlock);
 
-our $VERSION = '0.31';
+our $VERSION = '0.32';
 
 our $errstr;
 
@@ -117,8 +118,10 @@ sub lock {
                 $named_lock{$lock_key} = $self;             
         }
 
-        my $cmd = ( (-r './netlock') && (! -d './netlock') )
-                ? './netlock' : "$Config{bin}/netlock";
+        my ($cmd) = grep    { -r  && ! -d }
+                            (   './netlock', "$Config{bin}/netlock",
+                                "$Config{installsitescript}/netlock"
+                            );
         my $cmd_line = $Config{perlpath};
         $cmd_line =~ s!/!\\!g if ($is_win32);
 	$cmd_line .= " $cmd";
